@@ -1,0 +1,155 @@
+{% extends "base.html" %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block content %}
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+<style>
+  body {
+    font-family: 'Poppins', sans-serif;
+    background: #C1E1C1;
+    background-size: cover;
+    margin: 0;
+    padding: 0;
+  }
+
+  .shadow-wrap {
+    display: flex;
+    justify-content: center;  
+    align-items: center;      
+    height: 100vh;            
+    background: #C1E1C1;
+  }
+
+  form label {
+    font-size: 23px !important; 
+    color: white !important; 
+  }
+
+  .form-wrap {
+    background: #212529;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 600px;
+    transform: translateY(0) scale(1);
+    transition: transform 0.8s cubic-bezier(0.25, 0.1, 0.25, 1), 
+                box-shadow 0.8s cubic-bezier(0.25, 0.1, 0.25, 1);
+  }
+
+  .form-wrap:hover {
+    transform: translateY(-8px) scale(1.01);
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.35);
+  }
+
+  .form-wrap h3 {
+    text-align: center;
+    margin-bottom: 30px;
+    color: white;
+    font-size: 2.3rem;
+    padding-bottom: 12px;
+    border-bottom: 4px solid #198754;
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .form-control {
+    font-size: 22px;
+  }
+
+  .password-textbox {
+    font-size: 22px;
+  }
+
+  input[type="text"],
+  input[type="password"],
+  input[type="email"],
+  select,
+  textarea {
+    width: 100% !important;
+    box-sizing: border-box;
+  }
+
+  .password-container {
+    position: relative;
+    width: 100%;
+    display: block;
+}
+
+.password-container input {
+  width: 167% !important;
+  box-sizing: border-box;
+}
+
+.toggle-password {
+  position: absolute;
+  top: 50%;
+  left: 150%;
+  transform: translateY(-50%);
+  font-size: 24px;
+  color: #198754;
+  cursor: pointer;
+  z-index: 1; 
+}
+
+  button[type="submit"] {
+      background: #198754;
+      color: white;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      font-size: 23px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+      display: block;           
+      margin-left: auto;        
+      margin-right: auto;    
+  }
+
+  button[type="submit"]:hover {
+    background: #0f5132;
+    transform: translateY(-5px);
+    box-shadow: 0 6px 15px white;   
+  }
+</style>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-..." crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+<div class="shadow-wrap">
+  <div class="form-wrap">
+    <h3>LOGIN</h3>
+    <form method="POST">
+      {% csrf_token %}
+      {{ form.username.label_tag }}
+      {{ form.username|add_class:"form-control" }}
+
+      {{ form.password.label_tag }}
+      <div class="password-container">
+        <input type="password" name="password" class="password-textbox" id="password" required />
+        <i class="fa-solid fa-eye toggle-password" onclick="togglePassword()"></i>
+      </div>
+
+      <button type="submit">Log in</button>
+    </form>
+  </div>
+</div>
+
+<script>
+  function togglePassword() {
+    const passwordInput = document.getElementById("password");
+    const toggleIcon = document.querySelector(".toggle-password");
+    const isPassword = passwordInput.type === "password";
+
+    passwordInput.type = isPassword ? "text" : "password";
+    toggleIcon.classList.toggle("fa-eye");
+    toggleIcon.classList.toggle("fa-eye-slash");
+  }
+</script>
+{% endblock content %}

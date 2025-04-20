@@ -1,0 +1,45 @@
+<tr id="report-{{ report.id }}">
+  <td>{{ forloop.counter }}</td>
+  <td>{{ report.day }}</td>
+  <td>{{ report.task_name }}</td>
+  <td>{{ report.assigned_to.get_full_name }}</td>
+  <td>
+    {% if report.date_submitted %}
+      {{ report.date_submitted }}
+    {% else %}
+      Not Yet Submitted
+    {% endif %}
+  </td>
+  <td>{{ report.verified_by.get_full_name }}</td>
+  <td>
+    {% if report.is_done %}
+      <span style="color:green;">Completed</span>
+    {% else %}
+      <span style="color:red;">Pending</span>
+    {% endif %}
+  </td>
+  <td>
+    {% if report.assigned_to == request.user and not report.date_submitted %}
+    <form 
+      method="POST"
+      hx-post="{% url 'base:update_date_submitted' report.id %}" 
+      hx-target="#report-{{ report.id }}" 
+      hx-swap="outerHTML"
+      style="display: flex; gap: 5px;">
+      {% csrf_token %}
+      <input type="date" name="date" required class="form-control form-control-sm">
+      <button type="submit" class="btn btn-primary btn-sm">Submit</button>
+    </form>
+    {% endif %}
+
+    {% if report.verified_by == request.user and not report.is_done %}
+      <button 
+        class="btn btn-success"
+        hx-post="{% url 'base:mark_done_inline' report.id %}"
+        hx-target="#report-{{ report.id }}"
+        hx-swap="outerHTML">
+        Mark as Done
+      </button>
+    {% endif %}
+  </td>
+</tr>

@@ -1,0 +1,15 @@
+{% if report.date_submitted %}
+    {{ report.date_submitted }}
+{% elif user == report.assigned_to %}
+    <input 
+        type="date" 
+        name="date" 
+        hx-post="{% url 'update_date' report.id %}" 
+        hx-trigger="change" 
+        hx-target="this.parentElement"
+        hx-swap="outerHTML"
+        style="width: 140px;"
+    >
+{% else %}
+    Not submitted
+{% endif %}

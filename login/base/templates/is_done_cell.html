@@ -1,0 +1,11 @@
+{% if report.is_done %}
+    ✅ Done
+{% elif user == report.verified_by %}
+    <button 
+        hx-post="{% url 'mark_done_inline' report.id %}" 
+        hx-target="this.parentElement" 
+        hx-swap="outerHTML"
+    >Mark Done</button>
+{% else %}
+    ❌ Pending
+{% endif %}

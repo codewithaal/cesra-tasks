@@ -1,0 +1,13 @@
+<tr id="report-{{ report.id }}">
+  <td colspan="100%">
+    ✅ Marked as done.
+    <button
+      class="btn btn-warning btn-sm"
+      hx-post="{% url 'base:undo_report' report.id %}"
+      hx-target="#report-{{ report.id }}"
+      hx-swap="outerHTML"
+    >
+      Undo
+    </button>
+  </td>
+</tr>

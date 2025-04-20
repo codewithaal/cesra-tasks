@@ -1,0 +1,100 @@
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;;
+}
+
+.shadow-wrap {
+    border-radius: 5px;
+    padding: 25px;
+    background-color: #F0F2FB;
+}
+
+.form-wrap {
+    background-color: #fff;
+    padding: 70px;
+}
+
+.form-wrap form *{
+    display: block;
+    width: 60%;
+}
+
+.form-wrap form label {
+    margin-bottom: 5px;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 26px;
+}
+
+.form-wrap form input {
+    padding: 12px 20px;
+    border-radius: 5px;
+    border: 1px solid #DAE1F5;
+    background: #FFF;
+    color: #545D7A;
+}
+
+#id_username{
+    margin-bottom: 20px;
+}
+
+.form-wrap button{
+    border-radius: 5px;
+    background: #10182F;
+    color: #FFF;
+    text-align: center;
+    font-size: 16px;
+    padding: 12px 68px;
+    font-weight: 700;
+    border: none;
+    margin-top: 30px;
+    line-height: 26px;
+}
+
+.signup-link {
+    color: #10182F;
+    font-size: 15px;
+    margin-top: 20px;
+    text-align: center;
+    line-height: 25px;
+    display: block;
+    text-decoration: none;
+}
+
+.signup-link:hover {
+    text-decoration: underline;
+}
+
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: #6C7A89;
+    padding: 0 30px; 
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-family: 'Poppins', sans-serif;
+    z-index: 1000;
+    height: 60px; 
+    line-height: 1; 
+}
+
+.navbar-nav {
+    display: flex;          /* Flexbox layout */
+    align-items: right;    /* Vertically align items */
+}
+
+.navbar-nav .nav-item {
+    display: flex;           /* Ensure the list items are in a row */
+    align-items: right;    /* Vertically align items */
+}
+
+.navbar .nav-link {
+    color: white;
+    font-size: 26px;
+    margin-right: 40px;
+}
