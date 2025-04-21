@@ -115,8 +115,11 @@
 </nav>
 
 <div class="text-center" style="margin-top: 100px;">
-  <img id="profile-pic" class="profile-pic-top" src="{% static 'images/user_profile_pic.png' %}">
-
+  {% if user_profile.profile_picture and user_profile.profile_picture.name %}
+    <img id="profile-pic" class="profile-pic-top" src="{{ user_profile.profile_picture.url }}">
+  {% else %}
+    <img id="profile-pic" class="profile-pic-top" src="{% static 'images/user_dp.png' %}">
+  {% endif %}
   <p class="users-name">
     {{ user.first_name }} {{ user.last_name }}
   </p>

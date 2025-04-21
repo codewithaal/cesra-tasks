@@ -5,7 +5,7 @@ from multiselectfield import MultiSelectField
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    profile_picture = models.ImageField(upload_to='base/media/', default='static/images/user_profile_pic.png')  
+    profile_picture = models.ImageField(upload_to='base/media/', default='static/images/user_dp.png')  
 
     def __str__(self):
         return f"{self.user.first_name} {self.user.last_name}"
