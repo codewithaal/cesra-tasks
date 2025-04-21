@@ -36,7 +36,7 @@ def profilePicture(request):
     if request.method == 'POST':
         if request.POST.get('cropped_image'):
             cropped_image_data = request.POST['cropped_image']
-            format, imgstr = cropped_image_data.split(';base64,')  # e.g., data:image/jpeg;base64,...
+            format, imgstr = cropped_image_data.split(';base64,')  
             ext = format.split('/')[-1]
             img_data = base64.b64decode(imgstr)
 
@@ -92,7 +92,6 @@ def mark_done_inline(request, report_id):
     report.is_done = True
     report.save()
 
-    # Render undo button
     html = render_to_string('undo_row.html', {'report': report})
     return HttpResponse(html)
 
@@ -121,7 +120,6 @@ def tasksList(request):
     current_month = today.strftime('%B')
     current_year = today.year
 
-    # Reset old tasks
     outdated_reports = Report.objects.filter(
         display_month__icontains=current_month,
         display_year__lt=current_year
@@ -131,18 +129,41 @@ def tasksList(request):
         report.display_year = current_year
         report.save()
 
-    # Rank 'End of the month' tasks to the bottom
+    ranking_order = [
+        "Every 5th",
+        "Every 15th",
+        "15th of February",
+        "15th of December",
+        "16th of February",
+        "17th of the ff month",
+        "Every 20th",
+        "20th of February",
+        "25th of January",
+        "29th of the ff month",
+        "30th of the ff month",
+        "30th of April",
+        "30th of June",
+        "30th of January of the ff year",
+        "End of the month",
+        "31st of January of the ff year",
+        ""  
+    ]
+
+    whens = [
+        When(day=rank, then=Value(index)) for index, rank in enumerate(ranking_order)
+    ]
+
     reports = Report.objects.filter(
         display_month__icontains=current_month,
         display_year=current_year,
         is_done=False
     ).annotate(
-    is_end_of_month=Case(
-        When(day__icontains='End of the month', then=Value(1)),
-        default=Value(0),
-        output_field=IntegerField()
-    )
-).order_by('is_end_of_month', 'task_name')
+        custom_rank=Case(
+            *whens,
+            default=Value(len(ranking_order)),  # Push undefined values to the bottom
+            output_field=IntegerField()
+        )
+    ).order_by('custom_rank', 'task_name')
 
     context = {
         'reports': reports,
@@ -160,6 +181,5 @@ def undo_report(request, report_id):
     report.is_done = False
     report.save()
 
-    # Re-render the row
     html = render_to_string('report_row.html', {'report': report, 'user': request.user})
     return HttpResponse(html)
