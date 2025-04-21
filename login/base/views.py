@@ -1,9 +1,9 @@
+from PIL import Image
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from .forms import UserProfileForm
 from django.contrib.auth.forms import PasswordChangeForm
 from django.core.files.base import ContentFile
-from PIL import Image
 from .models import Report
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.decorators import login_required
@@ -40,7 +40,6 @@ def profilePicture(request):
             ext = format.split('/')[-1]
             img_data = base64.b64decode(imgstr)
 
-            # Optionally process with Pillow
             image = Image.open(io.BytesIO(img_data))
             image_io = io.BytesIO()
             image.save(image_io, format=ext)
@@ -59,7 +58,6 @@ def change_password(request):
     if request.method == 'POST':
         form = PasswordChangeForm(request.user, request.POST)
         if form.is_valid():
-            # Save the new password
             form.save()
             update_session_auth_hash(request, form.user)  # Keep the user logged in after password change
             messages.success(request, 'Your password was successfully updated!')
