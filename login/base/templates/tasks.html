@@ -89,7 +89,7 @@
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'base:tasksList' %}">Monthly Tasks</a>
+          <a class="nav-link active fw-bold text-white" href="{% url 'base:tasksList' %}">Monthly Tasks</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="{% url 'base:alertSection' %}">Your Week Ahead Alert</a>
@@ -135,7 +135,7 @@
           <td>{{ report.task_name }}</td>
           <td>
             <div style="display: flex; align-items: center; gap: 10px;">
-              <img src="{% if report.assigned_to.profile.profile_picture %}{{ report.assigned_to.profile.profile_picture.url }}{% else %}{% static 'images/user_profile_pic.png' %}{% endif %}"
+              <img src="{% if report.assigned_to.profile.profile_picture %}{{ report.assigned_to.profile.profile_picture.url }}{% else %}{% static 'images/user_dp.png' %}{% endif %}"
                    alt="Profile Picture"
                    style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;">
               {{ report.assigned_to.get_full_name }}
@@ -150,7 +150,7 @@
           </td>
           <td>
             <div style="display: flex; align-items: center; gap: 10px;">
-              <img src="{% if report.verified_by.profile.profile_picture %}{{ report.verified_by.profile.profile_picture.url }}{% else %}{% static 'images/user_profile_pic.png' %}{% endif %}"
+              <img src="{% if report.verified_by.profile.profile_picture %}{{ report.verified_by.profile.profile_picture.url }}{% else %}{% static 'images/user_dp.png' %}{% endif %}"
                    alt="Profile Picture"
                    style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;">
               {{ report.verified_by.get_full_name }}

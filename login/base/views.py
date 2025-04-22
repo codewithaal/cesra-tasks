@@ -16,6 +16,7 @@ from django.db.models import Case, When, Value, IntegerField
 from django.http import HttpResponseBadRequest
 from django.contrib import messages
 from django.utils import timezone
+from .utils import get_upcoming_tasks
 import base64
 import io
 
@@ -27,7 +28,11 @@ def loginView(request):
  return redirect("base:login")
 
 def alertSection(request):
- return render(request, "alerts.html", {})
+    tasks = get_upcoming_tasks(request.user)
+    if not tasks:
+        # Handle case when there are no upcoming tasks
+        tasks = None
+    return render(request, 'alerts.html', {'reports': tasks})
 
 def profilePicture(request):
     from .models import UserProfile
@@ -59,9 +64,9 @@ def change_password(request):
         form = PasswordChangeForm(request.user, request.POST)
         if form.is_valid():
             form.save()
-            update_session_auth_hash(request, form.user)  # Keep the user logged in after password change
+            update_session_auth_hash(request, form.user)  
             messages.success(request, 'Your password was successfully updated!')
-            return redirect('base:loginView')  # Redirect to the profile page
+            return redirect('base:loginView') 
         else:
             messages.error(request, 'Please correct the errors below.')
     else:
@@ -105,6 +110,7 @@ def tasks(request):
     )
     return render(request, 'tasks.html', {'reports': reports, 'now': now})
 
+@login_required
 def mark_done(request, report_id):
     report = get_object_or_404(Report, id=report_id)
     
