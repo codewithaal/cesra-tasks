@@ -61,7 +61,7 @@
           <a class="nav-link" href="/tasks/">Monthly Tasks</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="/alerts/">Your Week Ahead Alert</a>
+          <a class="nav-link" href="/alerts/">{{ user.first_name }}'s Week Ahead Alert</a>
         </li>
       </ul>
 
@@ -92,7 +92,7 @@
           <a class="nav-link active fw-bold text-white" href="{% url 'base:tasksList' %}">Monthly Tasks</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'base:alertSection' %}">Your Week Ahead Alert</a>
+          <a class="nav-link" href="{% url 'base:alertSection' %}">{{ user.first_name }}'s Week Ahead Alert</a>
         </li>
       </ul>
 
