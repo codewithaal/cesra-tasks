@@ -17,7 +17,11 @@ from django.http import HttpResponseBadRequest
 from django.contrib import messages
 from django.utils import timezone
 from .utils import get_upcoming_tasks
+from datetime import datetime
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 import base64
+import json
 import io
 
 @login_required

@@ -2,7 +2,6 @@
 {% load static %}
 
 {% block content %}
-
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 
 <!DOCTYPE html>
@@ -11,6 +10,7 @@
   <meta charset="UTF-8">
   <title>Tasks</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Comic+Neue&display=swap" rel="stylesheet">
   <style>
     body {
       margin: 0;
@@ -18,7 +18,6 @@
       background-color: #212529;
       font-family: 'Poppins', sans-serif;
       color: white;
-      text-align: center;
     }
     .navbar {
       position: fixed;
@@ -42,58 +41,124 @@
       background-color: #198754 !important;
       color: white;
       text-align: center;
-    }
-    .table-header-green th {
       font-weight: bold;
     }
     .centered-content {
       display: flex;
       flex-direction: column;
-      align-items: left;
-      justify-content: left;
+      align-items: center;
+      justify-content: center;
       margin-top: 100px;
+      margin-bottom: 30px;
     }
     .table-container {
-      overflow-x: auto;
-      margin-top: 30px;
-      margin-bottom: 50px;
+      margin-top: 40px;
+      margin-bottom: 40px;
     }
     .task-heading {
       font-size: 30px;
       font-weight: bold;
-      display: inline-block;
       margin-bottom: 10px;
     }
-    .profile-info {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      justify-content: center;
-    }
     .table-custom {
-      background-color: #212529; /* table background */
-      color: white;              /* text color */
+      width: 100%;
+      border-collapse: collapse;
+      background-color: #212529;
+      color: white;
+      border-radius: 8px;
+    }
+    .table-custom th, .table-custom td {
+      padding: 15px;
+      text-align: left;
+      border-bottom: 2px solid #444;
+      transition: background-color 0.3s ease-in-out;
     }
     .table-custom th {
-      background-color: #198754; /* green header */
+      background-color: #198754;
       color: white;
-      border: 1px solid white;
+      font-size: 1.2rem;
       text-align: center;
     }
     .table-custom td {
-      background-color: #212529; /* row background same as body */
+      background-color: #2a2f33;
       color: white;
-      border: 1px solid white;
+      font-size: 1rem;
     }
     .table-custom tbody tr:nth-child(odd) {
-      background-color: #212529;
+      background-color: #2a2f33;
     }
     .table-custom tbody tr:nth-child(even) {
-      background-color: #2a2f33; /* slightly different for striping */
+      background-color: #333a40;
     }
-    .table-custom td, 
-    .table-custom th {
-      font-size: 22px;  
+    .table-custom tbody tr:hover {
+      background-color: #1f2d36;
+    }
+    .message-container {
+      background: linear-gradient(135deg, #ffe6f0, #fff0f5);
+      border: 3px dashed #ffb6c1;
+      color: #b03060;
+      padding: 30px;
+      margin-top: 50px;
+      border-radius: 1.5rem;
+      width: 600px;
+      text-align: center;
+      transition: all 0.4s ease-in-out;
+      animation: popIn 0.6s ease-out;
+    }
+    .message-container:hover {
+      transform: translateY(-10px);
+    }
+    td.task-name {
+      background-color: #C1E1C1;
+      color: black;
+      text-align: center;
+      font-size: 20px;
+    }
+    td.days-left {
+      background-color: #C1E1C1;
+      color: black;
+      text-align: center;
+      font-size: 20px;
+    }
+    td.status-dropdown select {
+      background-color: #2a2f33;
+      color: white;
+      border: none;
+      font-size: 1rem;
+      padding: 5px;
+      border-radius: 5px;
+    }
+    .message-container #message-icon {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+    }
+    .message-container #message-title {
+      font-size: 1.4rem;
+      font-weight: bold;
+    }
+    .message-container #message-body {
+      font-size: 1rem;
+      margin-top: 0.3rem;
+    }
+    .status-dropdown select option:hover {
+      background-color: transparent !important;
+      color: white !important;
+    }
+    .btn-sm {
+      font-size: 18px;
+    }
+    td.text-center {
+      background-color: #C1E1C1;
+    }
+    @keyframes popIn {
+      0% {
+        transform: scale(0.9);
+        opacity: 0;
+      }
+      100% {
+        transform: scale(1);
+        opacity: 1;
+      }
     }
   </style>
 </head>
@@ -101,9 +166,7 @@
 
   <nav class="navbar navbar-expand-lg bg-success">
     <div class="container-fluid">
-      <a class="navbar-brand" href="/">
-        <img src="{% static 'images/navbar-logo.png' %}" alt="Logo" style="height: 60px;">
-      </a>
+      <a class="navbar-brand" href="/"><img src="{% static 'images/navbar-logo.png' %}" alt="Logo" style="height: 60px;"></a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -120,40 +183,64 @@
     </div>
   </nav>
 
-<div class="container centered-content">
-  <div>
-    <span class="task-heading">Tasks for</span>
-    <span id="this-week">This Week</span>
+  <div class="container centered-content">
+    <div>
+      <span class="task-heading">Tasks for</span>
+      <span id="this-week">This Week</span>
+    </div>
+
+    <div class="table-container">
+      <table class="table table-bordered table-custom">
+        <tbody>
+          {% if reports %}
+          <thead class="table-header-green">
+            <tr>
+              <th>📝 Task Name</th>
+              <th>⏳ Days Remaining</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for report in reports %}
+            <tr id="report-{{ report.id }}">
+              <td class="task-name">{{ report.task_name }}</td>
+              <td class="days-left">{{ report.days_remaining }} days</td>
+            </tr>
+            {% endfor %}
+          {% else %}
+          <div class="message-container">
+            <div id="message-icon">🎉</div>
+            <div id="message-title">NO TASKS THIS WEEK</div>
+            <div id="message-body">Breathe easy and relax! 😌</div>
+          </div>
+          {% endif %}
+        </tbody>
+      </table>
+    </div>
   </div>
 
-  <div class="table-container">
-    <table class="table table-bordered table-custom" style="width: 60%; margin-left: auto; margin-right: auto;">
-      <thead class="table-header-green">
-        <tr>
-          <th>📝 Task Name</th>
-          <th>⏳ Days Remaining</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% if reports %}
-          {% for report in reports %}
-          <tr id="report-{{ report.id }}">
-            <td>{{ report.task_name }}</td>
-            <td>{{ report.days_remaining }} days</td>
-          </tr>
-          {% endfor %}
-        {% else %}
-          <tr>
-            <td colspan="2">No Scheduled Tasks for This Week</td>
-          </tr>
-        {% endif %}
-      </tbody>
-    </table>
-  </div>
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    function markAsDone(reportId) {
+      if (confirm("Are you sure you want to mark this task as done?")) {
+        fetch(`/hide-task/${reportId}/`, {
+          method: 'POST',
+          headers: {
+            'X-CSRFToken': '{{ csrf_token }}',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ id: reportId })
+        })
+        .then(response => {
+          if (response.ok) {
+            const row = document.getElementById(`report-${reportId}`);
+            if (row) row.remove();
+          } else {
+            alert("Something went wrong!");
+          }
+        });
+      }
+    }
+  </script>
 </body>
 </html>
 

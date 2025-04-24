@@ -1,20 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
- <meta charset="UTF-8">
- <meta name="viewport" content="width=device-width, initial-scale=1.0">
- <title>CESRA's Task Tracker App</title>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CESRA's Task Tracker App</title>
 
- {% load static %}
- <link rel="icon" type="image/x-icon" href="{% static "images/favicon.ico" %}">
+  {% load static %}
+  <meta name="csrf-token" content="{{ csrf_token }}">
 
- <link rel="preconnect" href="https://fonts.googleapis.com">
- <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
- <link href="https://fonts.googleapis.com/css2?family=Mulish:wght@400;700&display=swap" rel="stylesheet">
+  <!-- Favicon -->
+  <link rel="icon" type="image/x-icon" href="{% static 'images/favicon.ico' %}">
 
- <link rel="stylesheet" href="{% static "css/style.css" %}">
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Mulish:wght@400;700&display=swap" rel="stylesheet">
 
- <script src="https://unpkg.com/htmx.org@1.9.2"></script>
+  <!-- CSS -->
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+  <!-- HTMX -->
+  <script src="https://unpkg.com/htmx.org@1.9.2" defer></script>
 </head>
 <body>
   {% block content %}{% endblock content %}
