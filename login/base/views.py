@@ -94,15 +94,19 @@ def update_date_submitted(request, report_id):
 
 @login_required
 def mark_done_inline(request, report_id):
-    report = get_object_or_404(Report, id=report_id)
-    if request.user != report.verified_by:
-        return HttpResponseForbidden("Not allowed.")
+    if request.method == 'POST':
+        report = get_object_or_404(Report, id=report_id)
 
-    report.is_done = True
-    report.save()
+        if request.user != report.verified_by:
+            return HttpResponseForbidden("You are not authorized to modify this report.")
 
-    html = render_to_string('undo_row.html', {'report': report})
-    return HttpResponse(html)
+        report.is_done = True
+        report.save()
+
+        html = render_to_string('undo_row.html', {'report': report})
+        return HttpResponse(html)
+
+    return HttpResponse(status=405)
 
 @login_required
 def tasks(request):
@@ -140,11 +144,14 @@ def tasksList(request):
         report.save()
 
     ranking_order = [
+        "Every 2nd",
         "Every 5th",
+        "Every 10th",
         "Every 15th",
         "15th of February",
         "15th of December",
         "16th of February",
+        "Every 17th",
         "17th of the ff month",
         "Every 20th",
         "20th of February",
