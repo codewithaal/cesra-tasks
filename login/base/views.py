@@ -177,7 +177,7 @@ def tasksList(request):
     ).annotate(
         custom_rank=Case(
             *whens,
-            default=Value(len(ranking_order)),  # Push undefined values to the bottom
+            default=Value(len(ranking_order)),  #Push undefined values to the bottom
             output_field=IntegerField()
         )
     ).order_by('custom_rank', 'task_name')
@@ -200,3 +200,15 @@ def undo_report(request, report_id):
 
     html = render_to_string('report_row.html', {'report': report, 'user': request.user})
     return HttpResponse(html)
+
+@login_required
+def undo_update(request, report_id):
+    print("Undo requested for report ID:", report_id)
+    try:
+        report = get_object_or_404(Report, id=report_id)
+        report.date_submitted = None
+        report.save()
+        print("Undo successful")
+    except Exception as e:
+        print("Error during undo:", e)
+    return redirect('base:tasks')
