@@ -229,19 +229,19 @@
               </div>
             </td>
             <td>
-              {% if report.assigned_to == request.user and not report.date_submitted %}
+              {% if report.assigned_to == user and not report.date_submitted %}
               <form 
                 method="POST"
                 hx-post="{% url 'base:update_date' report.id %}" 
                 hx-target="#report-{{ report.id }}" 
                 hx-swap="outerHTML"
-                class="d-flex justify-content-center gap-2"
+                class="d-flex justify-content-center gap-1"
               >
                 {% csrf_token %}
                 <input type="date" name="date" required class="form-control form-control-sm">
                 <button type="submit" class="btn btn-primary btn-sm">Submit</button>
               </form>
-              {% endif %}
+            {% endif %}
 
               {% if report.verified_by == request.user and not report.is_done %}
               <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#confirmModal{{ report.id }}" data-report-id="{{ report.id }}">

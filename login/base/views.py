@@ -163,7 +163,6 @@ def tasksList(request):
         "30th of January of the ff year",
         "End of the month",
         "31st of January of the ff year",
-        ""  
     ]
 
     whens = [
@@ -177,7 +176,7 @@ def tasksList(request):
     ).annotate(
         custom_rank=Case(
             *whens,
-            default=Value(len(ranking_order)),  #Push undefined values to the bottom
+            default=Value(len(ranking_order)),  
             output_field=IntegerField()
         )
     ).order_by('custom_rank', 'task_name')
@@ -201,14 +200,20 @@ def undo_report(request, report_id):
     html = render_to_string('report_row.html', {'report': report, 'user': request.user})
     return HttpResponse(html)
 
-@login_required
-def undo_update(request, report_id):
-    print("Undo requested for report ID:", report_id)
-    try:
+@csrf_exempt  
+def undo_submission(request, report_id):
+    if request.method == 'POST':
+        #Get the report object
         report = get_object_or_404(Report, id=report_id)
+
+        #Ensure the user is authorized to undo this submission
+        if report.assigned_to != request.user:
+            return JsonResponse({'error': 'Unauthorized'}, status=403)
+
+        #Reset the date_submitted to None
         report.date_submitted = None
         report.save()
-        print("Undo successful")
-    except Exception as e:
-        print("Error during undo:", e)
-    return redirect('base:tasks')
+
+        return JsonResponse({'success': True})
+
+    return JsonResponse({'error': 'Invalid request'}, status=400)

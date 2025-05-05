@@ -12,13 +12,6 @@
   </td>
   <td>{{ report.verified_by.get_full_name }}</td>
   <td>
-    {% if report.is_done %}
-      <span style="color:green;">Completed</span>
-    {% else %}
-      <span style="color:red;">Pending</span>
-    {% endif %}
-  </td>
-  <td>
     {% if report.assigned_to == request.user and not report.date_submitted %}
     <form 
       method="POST"
