@@ -230,24 +230,51 @@
             </td>
             <td>
               {% if report.assigned_to == user and not report.date_submitted %}
+              <!-- Button trigger modal -->
               <form 
                 method="POST"
                 hx-post="{% url 'base:update_date' report.id %}" 
                 hx-target="#report-{{ report.id }}" 
                 hx-swap="outerHTML"
                 class="d-flex justify-content-center gap-1"
+                id="submit-form-{{ report.id }}"
               >
                 {% csrf_token %}
                 <input type="date" name="date" required class="form-control form-control-sm">
-                <button type="submit" class="btn btn-primary btn-sm">Submit</button>
+                <!-- This button will only open the modal, not submit the form -->
+                <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#submitModal{{ report.id }}">
+                  Submit
+                </button>
               </form>
+            
+              <!-- Modal -->
+              <div class="modal fade" id="submitModal{{ report.id }}" tabindex="-1" aria-labelledby="submitModalLabel{{ report.id }}" aria-hidden="true">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="submitModalLabel{{ report.id }}">Confirm Submission</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                      Do you confirm that this is the correct date for submitting the task?
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="no-button btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                      <!-- This button will trigger the form submission -->
+                      <button type="submit" class="yes-button btn btn-success" form="submit-form-{{ report.id }}" data-bs-dismiss="modal">
+                        Yes
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
             {% endif %}
 
               {% if report.verified_by == request.user and not report.is_done %}
               <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#confirmModal{{ report.id }}" data-report-id="{{ report.id }}">
                 Mark as Done ✅
               </button>
-
+              
               <div class="modal fade" id="confirmModal{{ report.id }}" tabindex="-1" aria-labelledby="confirmModalLabel{{ report.id }}" aria-hidden="true">
                 <div class="modal-dialog">
                   <div class="modal-content">

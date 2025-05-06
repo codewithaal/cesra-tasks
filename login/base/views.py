@@ -89,7 +89,10 @@ def update_date_submitted(request, report_id):
     report.date_submitted = date
     report.save()
 
-    html = render_to_string("report_row.html", {"report": report, "user": request.user})
+    html = render_to_string("report_row.html", {
+    "report": report,
+    "request": request, 
+    })
     return HttpResponse(html)
 
 @login_required
