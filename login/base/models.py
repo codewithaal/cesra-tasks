@@ -25,11 +25,13 @@ MONTH_CHOICES = (
     ('December', 'December'),
 )
 
-# TO RUN: python manage.py shell -> from your_app.models import Report -> Report.reset_all_tasks(2025)
+def current_year():
+    return timezone.now().year
+
 class Report(models.Model):
     id = models.AutoField(primary_key=True)
     display_month = MultiSelectField(choices=MONTH_CHOICES, max_length=500)
-    display_year = models.IntegerField(default=timezone.now().year)
+    display_year = models.IntegerField(default=current_year)
     day = models.CharField(max_length=100)
     task_name = models.CharField(max_length=255)
     assigned_to = models.ForeignKey(User, on_delete=models.CASCADE, related_name='assigned_reports')
@@ -49,6 +51,5 @@ class Report(models.Model):
     @classmethod
     def reset_all_tasks(cls, from_year):
         return cls.objects.filter(
-            display_year=from_year,
-            is_done=True
-        ).update(is_done=False)
+            display_year=from_year
+        ).update(is_done=False, date_submitted=None)
