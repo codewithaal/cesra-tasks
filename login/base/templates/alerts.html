@@ -5,6 +5,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Comic+Neue&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans&display=swap" rel="stylesheet">
 
 <style>
   body {
@@ -86,28 +87,110 @@
   .table-custom tbody tr:hover {
     background-color: #1f2d36;
   }
-  .message-container {
-    background: linear-gradient(135deg, #ffe6f0, #fff0f5);
-    border: 3px dashed #ffb6c1;
-    color: #b03060;
-    padding: 30px;
-    margin-top: 50px;
-    border-radius: 1.5rem;
-    width: 600px;
-    text-align: center;
-    transition: all 0.4s ease-in-out;
-    animation: popIn 0.6s ease-out;
+
+  .present-box {
+  position: relative;
+  width: 500px;
+  height: 200px;
+  margin: 80px auto;
+  perspective: 1000px;
+}
+
+/* Box body */
+.box {
+  background: linear-gradient(to top, #e8f5e9, #c8e6c9);
+  width: 100%;
+  height: 100%;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(34, 139, 34, 0.3);
+  overflow: hidden;
+  position: relative;
+  z-index: 1;
+}
+
+/* Lid of the present */
+.lid {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 50px;
+  background: #66bb6a;
+  border-radius: 12px 12px 0 0;
+  transform-origin: top;
+  animation: openLid 2s ease forwards;
+  z-index: 3;
+}
+
+/* Vertical ribbon BEHIND the message */
+.ribbon-vertical {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 20px;
+  height: 100%;
+  background: #388e3c;
+  transform: translateX(-50%);
+  z-index: 1;  /* LOWER than the message */
+  border-radius: 10px;
+}
+
+/* Horizontal ribbon BEHIND the message */
+.ribbon-horizontal {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: 20px;
+  background: #388e3c;
+  transform: translateY(-50%);
+  z-index: 1;  /* LOWER than the message */
+  border-radius: 10px;
+}
+
+/* Message INSIDE the box and ABOVE ribbons */
+.message {
+  position: relative; 
+  z-index: 3;          
+  opacity: 0;
+  padding: 20px;
+  text-align: center;
+  color: #2e7d32;
+  font-family: 'Pixelify Sans';
+  font-size: 1.5rem;
+  animation: revealMessage 2s 1.5s ease-out forwards;
+}
+
+/* Lid opening animation */
+@keyframes openLid {
+  0% {
+    transform: rotateX(0deg);
   }
-  .message-container:hover {
-    transform: translateY(-10px);
+  100% {
+    transform: rotateX(-130deg);
   }
+}
+
+/* Message fade in */
+@keyframes revealMessage {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
   td.task-name,
   td.days-left,
   td.text-center {
     background-color: #C1E1C1;
     color: black;
     text-align: center;
-    font-size: 20px;
+    font-size: 22px;
+    font-family: 'Pixelify Sans';
   }
   td.status-dropdown select {
     background-color: #2a2f33;
@@ -192,10 +275,16 @@
       </tbody>
       {% else %}
       </table>
-      <div class="message-container">
-        <div id="message-icon">🎉</div>
-        <div id="message-title">NO TASKS THIS WEEK</div>
-        <div id="message-body">Breathe easy and relax! 😌</div>
+      <div class="present-box">
+        <div class="lid"></div>
+        <div class="ribbon-vertical"></div>
+        <div class="ribbon-horizontal"></div>
+        <div class="box">
+          <div class="message">
+            🎉🥳<br>No Tasks This Week!<br>
+            Take a moment to recharge and enjoy the downtime. You deserve it! 😌🎁
+          </div>
+        </div>
       </div>
       {% endif %}
   </div>

@@ -10,7 +10,7 @@ class Command(BaseCommand):
         now = localtime()
         current_year = now.year
         current_month_name = now.strftime("%B")  
-
+        
         matching_reports = Report.objects.filter(
             display_year=current_year,
             display_month__icontains=current_month_name,  
