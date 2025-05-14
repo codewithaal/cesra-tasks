@@ -2,17 +2,17 @@ from datetime import date, timedelta
 from .models import Report
 import calendar
 
-#Helper function to get the last day of a month
+# Helper function to get the last day of a month
 def get_last_day_of_month(year, month):
     return calendar.monthrange(year, month)[1]
 
-#Function to get the next due date based on a specific day or 'eom' for end of the month
+# Function to get the next due date based on a specific day or 'eom' for end of the month
 def get_next_due_date(day):
     today = date.today()
     year = today.year
     month = today.month
 
-    #Handle 'End of the month' as a special case with day = 'eom'
+    # Handle 'End of the month' as a special case with day = 'eom'
     if day == 'eom':
         last_day = get_last_day_of_month(year, month)
         due_date = date(year, month, last_day)
@@ -27,7 +27,7 @@ def get_next_due_date(day):
             due_date = date(year, month, last_day)
         return due_date
 
-    #Handle normal fixed day logic
+    # Handle normal fixed day logic
     try:
         due_date = date(year, month, day)
         if today > due_date:
@@ -40,7 +40,7 @@ def get_next_due_date(day):
             due_date = date(year, month, day)
         return due_date
     except ValueError:
-        #Handle invalid day (e.g., Feb 30), fall back to last day of that month
+        # Handle invalid day (e.g., Feb 30), fall back to last day of that month
         last_day = get_last_day_of_month(year, month)
         return date(year, month, last_day)
 
@@ -79,7 +79,7 @@ def get_upcoming_tasks(user):
 
         try:
             if schedule.get("eom"):
-                #End of current month
+                # End of current month
                 due_date = get_next_due_date('eom')
 
             elif "months" in schedule:
@@ -90,80 +90,86 @@ def get_upcoming_tasks(user):
                     continue  #Skip this schedule if not in allowed months
 
             elif "month" in schedule:
-                #Fixed specific date
+                # Fixed specific date
                 due_date = date(year, schedule["month"], schedule["day"])
 
             else:
-                #Regular same-month schedule
+                # Regular same-month schedule
                 due_date = date(today.year, today.month, schedule["day"])
 
-            #Alert 7 days before due date
+            # Alert 7 days before due date
             upcoming_alert_day_7 = due_date - timedelta(days=7)
-            #Alert 6 days before due date
+            # Alert 6 days before due date
             upcoming_alert_day_6 = due_date - timedelta(days=6)
-            #Alert 5 days before due date
+            # Alert 5 days before due date
             upcoming_alert_day_5 = due_date - timedelta(days=5)
-            #Alert 4 days before due date
+            # Alert 4 days before due date
             upcoming_alert_day_4 = due_date - timedelta(days=4)
-            #Alert 3 days before due date
+            # Alert 3 days before due date
             upcoming_alert_day_3 = due_date - timedelta(days=3)
-            #Alert 2 days before due date
+            # Alert 2 days before due date
             upcoming_alert_day_2 = due_date - timedelta(days=2)
-            #Alert 1 day before due date
+            # Alert 1 day before due date
             upcoming_alert_day_1 = due_date - timedelta(days=1)
 
             if today == upcoming_alert_day_7:
                 reports = Report.objects.filter(day__iexact=schedule["label"], assigned_to=user)
                 for task in reports:
                     days_remaining = (due_date - today).days
+                    formatted_days = f"{days_remaining} day" if days_remaining == 1 else f"{days_remaining} days"
                     alert_tasks.append({
                         'task_name': task.task_name,
-                        'days_remaining': days_remaining,
+                        'days_remaining': formatted_days,
                     })
             
             if today == upcoming_alert_day_6:
                 reports = Report.objects.filter(day__iexact=schedule["label"], assigned_to=user)
                 for task in reports:
                     days_remaining = (due_date - today).days
+                    formatted_days = f"{days_remaining} day" if days_remaining == 1 else f"{days_remaining} days"
                     alert_tasks.append({
                         'task_name': task.task_name,
-                        'days_remaining': days_remaining,
+                        'days_remaining': formatted_days,
                     })
             
             if today == upcoming_alert_day_5:
                 reports = Report.objects.filter(day__iexact=schedule["label"], assigned_to=user)
                 for task in reports:
                     days_remaining = (due_date - today).days
+                    formatted_days = f"{days_remaining} day" if days_remaining == 1 else f"{days_remaining} days"
                     alert_tasks.append({
                         'task_name': task.task_name,
-                        'days_remaining': days_remaining,
+                        'days_remaining': formatted_days,
                     })
             
             if today == upcoming_alert_day_4:
                 reports = Report.objects.filter(day__iexact=schedule["label"], assigned_to=user)
                 for task in reports:
                     days_remaining = (due_date - today).days
+                    formatted_days = f"{days_remaining} day" if days_remaining == 1 else f"{days_remaining} days"
                     alert_tasks.append({
                         'task_name': task.task_name,
-                        'days_remaining': days_remaining,
+                        'days_remaining': formatted_days,
                     })
             
             if today == upcoming_alert_day_3:
                 reports = Report.objects.filter(day__iexact=schedule["label"], assigned_to=user)
                 for task in reports:
                     days_remaining = (due_date - today).days
+                    formatted_days = f"{days_remaining} day" if days_remaining == 1 else f"{days_remaining} days"
                     alert_tasks.append({
                         'task_name': task.task_name,
-                        'days_remaining': days_remaining,
+                        'days_remaining': formatted_days,
                     })
             
             if today == upcoming_alert_day_2:
                 reports = Report.objects.filter(day__iexact=schedule["label"], assigned_to=user)
                 for task in reports:
                     days_remaining = (due_date - today).days
+                    formatted_days = f"{days_remaining} day" if days_remaining == 1 else f"{days_remaining} days"
                     alert_tasks.append({
                         'task_name': task.task_name,
-                        'days_remaining': days_remaining,
+                        'days_remaining': formatted_days,
                     })
             
             if today == upcoming_alert_day_1:

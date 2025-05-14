@@ -89,12 +89,12 @@
   }
 
   .present-box {
-  position: relative;
-  width: 500px;
-  height: 200px;
-  margin: 80px auto;
-  perspective: 1000px;
-}
+    position: relative;
+    width: 500px;
+    height: 200px;
+    margin: 80px auto;
+    perspective: 1000px;
+  }
 
 /* Box body */
 .box {
@@ -269,7 +269,7 @@
         {% for report in reports %}
         <tr id="report-{{ report.id }}">
           <td class="task-name">{{ report.task_name }}</td>
-          <td class="days-left">{{ report.days_remaining }} days</td>
+          <td class="days-left">{{ report.days_remaining }}</td>
         </tr>
         {% endfor %}
       </tbody>

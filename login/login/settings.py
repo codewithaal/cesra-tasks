@@ -18,7 +18,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'base.apps.BaseConfig',
     'widget_tweaks',
-    'django_celery_beat',
 ]
 
 MIDDLEWARE = [
@@ -95,7 +94,3 @@ LOGOUT_REDIRECT_URL = '/accounts/login/'
 
 MEDIA_URL = '/'  
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')  
-
-CELERY_BROKER_URL = 'redis://localhost:6379/0'
-CELERY_ACCEPT_CONTENT = ['json']
-CELERY_TASK_SERIALIZER = 'json'
