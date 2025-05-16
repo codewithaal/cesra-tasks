@@ -9,6 +9,7 @@ urlpatterns = [
  path("accounts/logout/", loginView, name="loginView"),
  path("tasks/", tasksList, name="tasksList"),
  path("alerts/", alertSection, name="alertSection"),
+ path("notifications/", views.notifications, name='notifications'),
  path("profile/", profilePicture, name="profilePicture"),
  path("accounts/", include("django.contrib.auth.urls")),
  path('change-password/', views.change_password, name='changePassword'),

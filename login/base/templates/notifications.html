@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Navbar with Notification Dropdown</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+
+    body {
+      background-color: #212529;
+      font-family: 'Poppins', sans-serif;
+      color: white;
+      padding-top: 80px;
+    }
+
+    .navbar {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 1030;
+    }
+
+    .navbar-nav .nav-link {
+      color: white;
+    }
+
+    .nav-item .fa-bell {
+      font-size: 28px;
+      color: white;
+    }
+
+    .nav-item .fa-bell:hover {
+      color: #ffc107;
+    }
+
+    .notification-badge {
+      position: absolute;
+      top: 0px;
+      right: 0px;
+      padding: 2px 6px;
+      border-radius: 50%;
+      background-color: red;
+      color: white;
+      font-size: 10px;
+      font-weight: bold;
+      min-width: 18px;
+      height: 18px;
+      text-align: center;
+      line-height: 14px;
+    }
+
+    .dropdown-menu a {
+      white-space: normal;
+    }
+
+    .dropdown-item.fw-bold {
+      background-color: #f8f9fa;
+    }
+
+    .dropdown-item small {
+      font-size: 10px;
+    }
+
+  </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg bg-success">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="/">
+      <img src="{% static 'images/navbar-logo.png' %}" alt="Logo" style="height: 60px;">
+    </a>
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+      aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'base:tasksList' %}">Monthly Tasks</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'base:alertSection' %}">{{ user.first_name }}'s Week Ahead Alert</a>
+        </li>
+      </ul>
+      
+      <ul class="navbar-nav">
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle position-relative" href="#" id="notificationDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="fas fa-bell"></i>
+            {% if notifications|length > 0 %}
+              <span class="notification-badge">{{ notifications|length }}</span>
+            {% endif %}
+          </a>
+          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notificationDropdown" style="width: 300px; max-height: 400px; overflow-y: auto;">
+            {% for n in notifications %}
+              <li class="dropdown-item{% if not n.is_read %} fw-bold{% endif %}">
+                <a href="{{ n.url }}" class="text-decoration-none d-block text-dark">
+                  {{ n.message }}<br>
+                  <small class="text-muted">{{ n.time_since }}</small>
+                </a>
+              </li>
+            {% empty %}
+              <li class="dropdown-item text-muted">No notifications</li>
+            {% endfor %}
+          </ul>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'base:profilePicture' %}">Profile</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'base:logout' %}">Log Out</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+
+{% endblock content %}

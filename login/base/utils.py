@@ -1,23 +1,21 @@
 from datetime import date, timedelta
 from .models import Report
+from base.models import Notification
+from django.urls import reverse
 import calendar
 
-# Helper function to get the last day of a month
 def get_last_day_of_month(year, month):
     return calendar.monthrange(year, month)[1]
 
-# Function to get the next due date based on a specific day or 'eom' for end of the month
 def get_next_due_date(day):
     today = date.today()
     year = today.year
     month = today.month
 
-    # Handle 'End of the month' as a special case with day = 'eom'
     if day == 'eom':
         last_day = get_last_day_of_month(year, month)
         due_date = date(year, month, last_day)
         if today > due_date:
-            # Move to the next month if due date is in the past
             if month == 12:
                 year += 1
                 month = 1
@@ -27,7 +25,6 @@ def get_next_due_date(day):
             due_date = date(year, month, last_day)
         return due_date
 
-    # Handle normal fixed day logic
     try:
         due_date = date(year, month, day)
         if today > due_date:
@@ -40,11 +37,9 @@ def get_next_due_date(day):
             due_date = date(year, month, day)
         return due_date
     except ValueError:
-        # Handle invalid day (e.g., Feb 30), fall back to last day of that month
         last_day = get_last_day_of_month(year, month)
         return date(year, month, last_day)
 
-# Function to get upcoming tasks for a user
 def get_upcoming_tasks(user):
     today = date.today()
     alert_tasks = []
@@ -83,33 +78,22 @@ def get_upcoming_tasks(user):
                 due_date = get_next_due_date('eom')
 
             elif "months" in schedule:
-                # e.g. 30th of the month only on Jan and Jul
                 if today.month in schedule["months"]:
                     due_date = date(today.year, today.month, schedule["day"])
                 else:
-                    continue  #Skip this schedule if not in allowed months
-
+                    continue  
             elif "month" in schedule:
-                # Fixed specific date
                 due_date = date(year, schedule["month"], schedule["day"])
 
             else:
-                # Regular same-month schedule
                 due_date = date(today.year, today.month, schedule["day"])
 
-            # Alert 7 days before due date
             upcoming_alert_day_7 = due_date - timedelta(days=7)
-            # Alert 6 days before due date
             upcoming_alert_day_6 = due_date - timedelta(days=6)
-            # Alert 5 days before due date
             upcoming_alert_day_5 = due_date - timedelta(days=5)
-            # Alert 4 days before due date
             upcoming_alert_day_4 = due_date - timedelta(days=4)
-            # Alert 3 days before due date
             upcoming_alert_day_3 = due_date - timedelta(days=3)
-            # Alert 2 days before due date
             upcoming_alert_day_2 = due_date - timedelta(days=2)
-            # Alert 1 day before due date
             upcoming_alert_day_1 = due_date - timedelta(days=1)
 
             if today == upcoming_alert_day_7:
@@ -186,3 +170,8 @@ def get_upcoming_tasks(user):
             continue
 
     return alert_tasks
+
+def create_task_transfer_notification(report, user):
+    message = f"Report '{report.task_name}' was marked as submitted by {user.get_full_name()}."
+    url = reverse("report_detail", args=[report.id])  
+    Notification.objects.create(user=report.assigned_to, message=message, url=url)

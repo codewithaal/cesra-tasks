@@ -20,13 +20,16 @@ from .utils import get_upcoming_tasks
 from datetime import datetime
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+from .models import Notification
+from .utils import create_task_transfer_notification
 import base64
 import json
 import io
 
 @login_required
 def home(request):
- return render(request, "home.html", {})
+    unread_count = Notification.objects.filter(user=request.user, is_read=False).count()
+    return render(request, 'home.html', {'unread_count': unread_count})
 
 def loginView(request):
  return redirect("base:login")
@@ -34,9 +37,13 @@ def loginView(request):
 def alertSection(request):
     tasks = get_upcoming_tasks(request.user)
     if not tasks:
-        # Handle case when there are no upcoming tasks
         tasks = None
     return render(request, 'alerts.html', {'reports': tasks})
+
+@login_required
+def notifications(request):
+    notifications = Notification.objects.filter(user=request.user).order_by('-timestamp')[:20] 
+    return render(request, 'notifications.html', {'notifications': notifications})
 
 def profilePicture(request):
     from .models import UserProfile
@@ -88,6 +95,8 @@ def update_date_submitted(request, report_id):
 
     report.date_submitted = date
     report.save()
+
+    create_task_transfer_notification(report, request.user)
 
     html = render_to_string("report_row.html", {
     "report": report,
@@ -206,14 +215,12 @@ def undo_report(request, report_id):
 @csrf_exempt  
 def undo_submission(request, report_id):
     if request.method == 'POST':
-        #Get the report object
         report = get_object_or_404(Report, id=report_id)
 
         #Ensure the user is authorized to undo this submission
         if report.assigned_to != request.user:
             return JsonResponse({'error': 'Unauthorized'}, status=403)
 
-        #Reset the date_submitted to None
         report.date_submitted = None
         report.save()
 
